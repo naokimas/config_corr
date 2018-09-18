@@ -1,3 +1,4 @@
+
 function [C_con, alpha, beta, it] = max_ent_K_config(C, tolerance, r, corr_preserve)
 %
 % Input
