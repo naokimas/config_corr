@@ -63,7 +63,7 @@ def max_ent_K_config(C, tolerance, r, corr_preserve):
     return C_con, alpha, beta, it
 # end of def max_ent_K_config
 
-data_type = 1
+data_type = 2
 
 curr_dir = '../data/'
 # curr_dir = '.' # should be modified to be consistent with your folder name

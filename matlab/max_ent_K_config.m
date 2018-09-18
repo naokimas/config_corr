@@ -1,4 +1,3 @@
-
 function [C_con, alpha, beta, it] = max_ent_K_config(C, tolerance, r, corr_preserve)
 %
 % Input
@@ -27,26 +26,14 @@ if corr_preserve==1 % work on the correlation matrix
 else % work on the covariance matrix
     s = sum(C,2); % node strength including the self-loop
 end
+% 's' is a column vector
 
 K = inv(C); % precision matrix from data
-% sum(sum(abs(K*C-eye(N))))
 alpha = diag(K); % initialization
 beta = zeros(N,1); % initialization
-
-% The following initialization is not used.
-% beta = mean(mean(K)) / 2 * ones(N,1); % initialization
-
-% The following initialization is not used.
-%
-% U = ones(N,N);
-% for i=1:N
-%    U(i,i) = N-1;
-% end
-% beta = inv(U) * (sum(K,2) - diag(K)); % initialization
-% inv U may be analytically derived
-    
 error = 1e+3; % initialization
 it=0; % number of iteration
+
 while (error > tolerance) 
 
     % construct the precision matrix from the current estimate
@@ -62,13 +49,6 @@ while (error > tolerance)
     alpha = alpha + r * (diag(C_con) - diag(C));
     if corr_preserve==1
         corr_est = diag(diag(C_con))^(-1/2) * C_con * diag(diag(C_con))^(-1/2); % correlation matrix
-%        for i=1:N
-%            corr_est(i,i) = 1.0;
-%            for j=1:i-1
-%                corr_est(i,j) = C_con(i,j) / sqrt(C_con(i,i)*C_con(j,j));
-%                corr_est(j,i) = corr_est(i,j);
-%            end
-%        end
         beta = beta + r * (1/N) * (sum(corr_est,2) - s); % gradient descent on the correlation matrix
     else
         beta = beta + r * (1/N) * (sum(C_con,2) - s); % gradient descent on the covariance matrix

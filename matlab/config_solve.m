@@ -5,16 +5,16 @@
 % Input data can be either a covariance matrix or a correlation matrix
 
 clear
-% curr_dir = '../data'
-curr_dir = '.' % should be modified to be consistent with your folder name
+curr_dir = '../data'
+% curr_dir = '.' % should be modified to be consistent with your folder name
 
 % We provide only motivation.txt (as described in Masuda, Kojaku & Sano, Physical Review E, 2018)
 % Matrix C can be either a covariance or correlation matrix
-C = load([curr_dir '/motivation.txt']);
+% C = load([curr_dir '/motivation.txt']);
 % C = load([curr_dir '/cov105115_all.txt']);
 % C = load([curr_dir '/cov118932_all.txt']);
 % C = load([curr_dir '/JapanCov.txt']);
-% C = load([curr_dir '/USCov.txt]');
+ C = load([curr_dir '/USCov.txt']);
 
 N = size(C,1); % size of the matrix
 
