@@ -13,21 +13,14 @@ curr_dir = '../data'
 % C = load([curr_dir '/motivation.txt']);
 % C = load([curr_dir '/cov105115_all.txt']);
 % C = load([curr_dir '/cov118932_all.txt']);
-% C = load([curr_dir '/JapanCov.txt']);
- C = load([curr_dir '/USCov.txt']);
+ C = load([curr_dir '/JapanCov.txt']);
+% C = load([curr_dir '/USCov.txt']);
 
 N = size(C,1); % size of the matrix
 
-transform_to_corr_mat = 1; 
-% If transform_to_corr_mat == 1, transform the input covariance matrix to the correlation matrix before running the gradient descent method
-% Default value is 1
-
-if transform_to_corr_mat == 1
-    C = diag(diag(C))^(-1/2) * C * diag(diag(C))^(-1/2); % corr matrix
-end
 
 min_eig_C = min(eig(C));
-if min_eig_C < 1e-6
+if min_eig_C < 1e-6 * max(diag(C))
     fprintf('min eig = %f\n', min_eig_C);
     error('Input correlation/covariance matrix must be full rank');
 end
@@ -37,16 +30,17 @@ tolerance = 1e-5; % to judge whether the algorithm has converged. In the paper =
 r = 1e-4; % learning rate. If r is too large, the algorithm would not converge
 % default r = 1e-4
 
-% C is either a covariance or correlation matrix depending on the value of transform_to_corr_mat.
-% Anyways, we feed C to max_ent_K_config (defined in max_ent_K_config.m)
-[C_con, alpha, beta, it] = max_ent_K_config(C, tolerance, r, 0);
+transform_to_corr_mat = 1; 
+% If transform_to_corr_mat == 1, transform the input covariance matrix to the correlation matrix before running the gradient descent method
+% Default value is 1
+[C_con, alpha, beta, it] = max_ent_K_config(C, tolerance, r, transform_to_corr_mat);
 % C_con is a covariance matrix but not a correlation matrix
 
 if transform_to_corr_mat == 1
     C_con = diag(diag(C_con))^(-1/2) * C_con * diag(diag(C_con))^(-1/2); % corr matrix
 end
-
 % C_con is either a covariance or correlation matrix depending on the value of transform_to_corr_mat.
+
 K_con = inv(C_con); % precision matrix
 
 L = N; % L should be set to the length of the original data for which the Pearson correlation is calculated (e.g., length of the time series)

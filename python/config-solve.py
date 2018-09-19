@@ -1,14 +1,14 @@
 import numpy as np
 import numpy.matlib
 
-def max_ent_K_config(C, tolerance, r, corr_preserve):
+def max_ent_K_config(C, tolerance, r, transform_to_corr_mat):
 #
 # Input
 #   C: covariance matrix
 #   tolerance: tolerance in relative error
 #   r: learning rate
-#   corr_preserve = True if the node strength in terms of the Pearson corr should be preserved.
-#                          = False if the node strength in terms of the covariance should be preserved. Should be set to 0, and one should feed a correlation matrix as C
+#   transform_to_corr_mat = True if one transforms the input covariance matrix to the correlation matrix before running the gradient descent method. Otherwise False.
+#   default value is True
 #
 # Output
 #   C_con: estimated covariance matrix
@@ -21,13 +21,11 @@ def max_ent_K_config(C, tolerance, r, corr_preserve):
 
     N = C.shape[0] # number of nodes
 
-    if corr_preserve==True: # work on the correlation matrix
+    if transform_to_corr_mat == True: # work on the correlation matrix
         # transform the original covariance matrix to the correlation matrix
         D_n_05 = np.diag(np.power(np.diag(C),-0.5)) # = D^{-1/2}
-        corr = np.dot(np.dot(D_n_05, C), D_n_05) # = D^{-1/2} * C * D^{-1/2}
-        s = np.sum(corr, axis=1) # node strength including the self-loop
-    else: # work on the covariance matrix
-        s = np.sum(C, axis=1) # node strength including the self-loop
+        C = np.dot(np.dot(D_n_05, C), D_n_05) # = D^{-1/2} * C * D^{-1/2}
+    s = np.sum(C, axis=1) # node strength including the self-loop
 
     K = np.linalg.inv(C) # precision matrix from data
     alpha = np.diag(K) # initialization
@@ -45,27 +43,27 @@ def max_ent_K_config(C, tolerance, r, corr_preserve):
 
         # gradient descent on the log likelihood
         alpha = alpha + r * (np.diag(C_con) - np.diag(C))
-        if corr_preserve == True:
-            D_n_05 = np.diag(np.power(np.diag(C_con),-0.5))
-            corr_est = np.dot(np.dot(D_n_05, C_con), D_n_05) # correlation matrix
-            beta = beta + r * (1/N) * (np.sum(corr_est, axis=1) - s) # gradient descent on the correlation matrix
-        else:
-            beta = beta + r * (1/N) * (np.sum(C_con, axis=1) - s) # gradient descent on the covariance matrix
+#        if corr_preserve == True:
+#            D_n_05 = np.diag(np.power(np.diag(C_con),-0.5))
+#            corr_est = np.dot(np.dot(D_n_05, C_con), D_n_05) # correlation matrix
+#            beta = beta + r * (1/N) * (np.sum(corr_est, axis=1) - s) # gradient descent on the correlation matrix
+#        else:
+        beta = beta + r * (1/N) * (np.sum(C_con, axis=1) - s) # gradient descent on the covariance matrix
 
         if it % 1000 == 0: # Then measure the relative error
-            if corr_preserve == True:
-                error = (sum(abs((np.diag(C) - np.diag(C_con)) / np.diag(C))) + sum(abs(((s - np.sum(corr_est, axis=1)) / s)))) / N;
-            else:
-                error = (sum(abs((np.diag(C) - np.diag(C_con)) / np.diag(C))) + sum(abs(((s - np.sum(C_con, axis=1)) / s)))) / N;
+#            if corr_preserve == True:
+#                error = (sum(abs((np.diag(C) - np.diag(C_con)) / np.diag(C))) + sum(abs(((s - np.sum(corr_est, axis=1)) / s)))) / N;
+#            else:
+            error = (sum(abs((np.diag(C) - np.diag(C_con)) / np.diag(C))) + sum(abs(((s - np.sum(C_con, axis=1)) / s)))) / N;
             print('%f %f %f' % (error, np.mean(abs(alpha)), np.mean(abs(beta))))
         it = it + 1
 
     return C_con, alpha, beta, it
 # end of def max_ent_K_config
 
-data_type = 2
+data_type = 4
 
-curr_dir = '../data/'
+curr_dir = '../../../data/'
 # curr_dir = '.' # should be modified to be consistent with your folder name
 
 # We provide only motivation.txt (as described in Masuda, Kojaku & Sano, Physical Review E, 2018)
@@ -87,15 +85,10 @@ transform_to_corr_mat = True
 # if True, transform the input covariance matrix to the correlation matrix before running the gradient descent method
 # default value is True
 
-if transform_to_corr_mat == True:
-    # transform the original covariance matrix to the correlation matrix
-    D_n_05 = np.diag(np.power(np.diag(C),-0.5)) # = D^{-1/2}
-    C = np.dot(np.dot(D_n_05, C), D_n_05) # = D^{-1/2} * C * D^{-1/2}
-
 # eigenvalues of the original covariance or correlation matrix
 eigs_org, eig_vector = np.linalg.eig(C)
 min_eig_C = min(eigs_org)
-if min_eig_C < 1e-6:
+if min_eig_C < 1e-6 * max(np.diag(C)):
     print('min eig = %f' % min_eig_C)
     print('Input correlation/covariance matrix must be full rank')
 
@@ -104,7 +97,7 @@ tolerance = 1e-5; # to judge whether the algorithm has converged. In the paper =
 r = 1e-4; # learning rate. If r is too large, the algorithm would not converge
 # default r = 1e-4
 
-C_con, alpha, beta, it = max_ent_K_config(C, tolerance, r, 0);
+C_con, alpha, beta, it = max_ent_K_config(C, tolerance, r, transform_to_corr_mat);
 
 if transform_to_corr_mat == True:
     D_n_05 = np.diag(np.power(np.diag(C_con),-0.5))

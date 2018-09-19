@@ -1,14 +1,13 @@
-function [C_con, alpha, beta, it] = max_ent_K_config(C, tolerance, r, corr_preserve)
+function [C_con, alpha, beta, it] = max_ent_K_config(C, tolerance, r, transform_to_corr_mat)
 %
 % Input
 %   C: covariance matrix
 %   tolerance: tolerance in relative error
 %   r: learning rate
-%   corr_preserve = 1 if the node strength in terms of the Pearson corr 
-%     should be preserved. = 0 if the node strength in terms of the
-%     covariance should be preserved. Should be set to 0, and one should feed
-%     a correlation matrix as C.
-%
+%   transform_to_corr_mat: whether to trasnform the input and output covariance matrix
+%   to the correlation matrix.
+%      0: no transform
+%      1: transform (default)%
 % Output
 %   C_con: estimated covariance matrix
 %   alpha, beta: parameters of the estimated covariance/precision matrix
@@ -20,12 +19,10 @@ function [C_con, alpha, beta, it] = max_ent_K_config(C, tolerance, r, corr_prese
 
 N = size(C,1); % number of nodes
 
-if corr_preserve==1 % work on the correlation matrix
-    corr = diag(diag(C))^(-1/2) * C * diag(diag(C))^(-1/2); % corr matrix
-    s = sum(corr,2); % node strength including the self-loop
-else % work on the covariance matrix
-    s = sum(C,2); % node strength including the self-loop
+if transform_to_corr_mat == 1 % transform the input matrix to the correlation matrix
+    C = diag(diag(C))^(-1/2) * C * diag(diag(C))^(-1/2); % corr matrix; overwritten on the original variable C
 end
+s = sum(C,2); % node strength including the self-loop
 % 's' is a column vector
 
 K = inv(C); % precision matrix from data
@@ -47,21 +44,21 @@ while (error > tolerance)
 
     % gradient descent on the log likelihood
     alpha = alpha + r * (diag(C_con) - diag(C));
-    if corr_preserve==1
-        corr_est = diag(diag(C_con))^(-1/2) * C_con * diag(diag(C_con))^(-1/2); % correlation matrix
-        beta = beta + r * (1/N) * (sum(corr_est,2) - s); % gradient descent on the correlation matrix
-    else
+%    if corr_preserve==1
+%        corr_est = diag(diag(C_con))^(-1/2) * C_con * diag(diag(C_con))^(-1/2); % correlation matrix
+%        beta = beta + r * (1/N) * (sum(corr_est,2) - s); % gradient descent on the correlation matrix
+%    else
         beta = beta + r * (1/N) * (sum(C_con,2) - s); % gradient descent on the covariance matrix
-    end
+%    end
 
     if (mod(it,1000) == 0) % Then measure the relative error
-        if corr_preserve==1
-            error = (sum(abs((diag(C) - diag(C_con)) ./ diag(C))) + ...
-                sum(abs(((s - sum(corr_est,2)) ./ s)))) / N;
-        else
+%        if corr_preserve==1
+%            error = (sum(abs((diag(C) - diag(C_con)) ./ diag(C))) + ...
+%                sum(abs(((s - sum(corr_est,2)) ./ s)))) / N;
+%        else
             error = (sum(abs((diag(C) - diag(C_con)) ./ diag(C))) + ...
                 sum(abs(((s - sum(C_con,2)) ./ s)))) / N;
-        end
+%        end
         fprintf('%f %f %f\n', error, mean(abs(alpha)), mean(abs(beta)));
     end
     it = it + 1;
