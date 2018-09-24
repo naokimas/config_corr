@@ -2,6 +2,7 @@
 # test max_ent_config_naive_gradient_descent.py
 import numpy as np
 import numpy.matlib
+import config_corr
 
 data_type = 4
 
