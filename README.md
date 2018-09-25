@@ -1,21 +1,31 @@
 # config_corr
 Configuration model for correlation/covariance matrices
 
-## Python version
+This package contains two algorithms.
+* Altogihm DMCC solves a convex optimization problem and usually better than the other naive gradient descent algorithm. Therefore, we recommend DMCC over the naive gradient descent algorithm.
+* DMCC, including the performance test, is documented in the accompanying pdf file.
+* DMCC is provided in Python only.
+* The naive gradient descent algorithm is provided in Python and MATLAB.
+
+## DMCC algorithm in Python
 
 ```python
-python3 config-solve.py
+python3 test_dmcc.py
 ```
 
-* Variable data_type specifies which data set to be used.
-* Variable curr_dir should be modified according to where you place the data set.
+## Naive gradient descent algorithm in Python
 
-## MATLAB version
-
-```matlab
-config_solve
+```python
+python3 test_naive_gradient_descent.py
 ```
 
-* config_solve.m calls max_ent_K_config.m
-* The data set to be used should be specified within config_solve.m
+
+## Naive gradient descent algorithm in MATLAB
+
+```MATLAB
+test_naive_gradient_descent
+```
+
+* test_naive_gradient_descent.m calls max_ent_config_naive_gradient_descent.m
+* The data set to be used should be specified within test_naive_gradient_descent.m
 * Variable curr_dir should be modified according to where you place the data set.
