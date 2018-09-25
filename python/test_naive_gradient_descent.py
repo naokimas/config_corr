@@ -22,7 +22,7 @@ eigs_org, eig_vector = np.linalg.eig(C)
 min_eig_C = min(eigs_org)
 if min_eig_C < 1e-6 * max(np.diag(C)):
     print('min eig = %f' % min_eig_C)
-    print('Input correlation/covariance matrix must be full rank')
+    print('Input correlation/covariance matrix must be of full rank')
 
 tolerance = 1e-5; # to judge whether the algorithm has converged. In the paper = 1e-5
 
