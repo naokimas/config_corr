@@ -1,4 +1,4 @@
-function [C_con, alpha, beta, it] = max_ent_K_config(C, tolerance, r, transform_to_corr_mat)
+function [C_con, alpha, beta, it] = max_ent_config_naive_gradient_descent(C, tolerance, r, transform_to_corr_mat)
 %
 % Input
 %   C: covariance matrix
@@ -44,21 +44,11 @@ while (error > tolerance)
 
     % gradient descent on the log likelihood
     alpha = alpha + r * (diag(C_con) - diag(C));
-%    if corr_preserve==1
-%        corr_est = diag(diag(C_con))^(-1/2) * C_con * diag(diag(C_con))^(-1/2); % correlation matrix
-%        beta = beta + r * (1/N) * (sum(corr_est,2) - s); % gradient descent on the correlation matrix
-%    else
-        beta = beta + r * (1/N) * (sum(C_con,2) - s); % gradient descent on the covariance matrix
-%    end
+    beta = beta + r * (1/N) * (sum(C_con,2) - s); % gradient descent on the covariance matrix
 
     if (mod(it,1000) == 0) % Then measure the relative error
-%        if corr_preserve==1
-%            error = (sum(abs((diag(C) - diag(C_con)) ./ diag(C))) + ...
-%                sum(abs(((s - sum(corr_est,2)) ./ s)))) / N;
-%        else
-            error = (sum(abs((diag(C) - diag(C_con)) ./ diag(C))) + ...
-                sum(abs(((s - sum(C_con,2)) ./ s)))) / N;
-%        end
+        error = (sum(abs((diag(C) - diag(C_con)) ./ diag(C))) + ...
+            sum(abs(((s - sum(C_con,2)) ./ s)))) / N;
         fprintf('%f %f %f\n', error, mean(abs(alpha)), mean(abs(beta)));
     end
     it = it + 1;
