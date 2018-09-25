@@ -2,25 +2,14 @@
 # test max_ent_config_naive_gradient_descent.py
 import numpy as np
 import numpy.matlib
-import config_corr
+import configcorr as cg
 
-data_type = 4
-
-curr_dir = '../../../data/'
+curr_dir = '../'
 # curr_dir = '.' # should be modified to be consistent with your folder name
 
 # We provide only motivation.txt (as described in Masuda, Kojaku & Sano, Physical Review E, 2018)
 # Matrix C can be either a covariance or correlation matrix
-if data_type==1: # academic motivation data
-    C = np.loadtxt(curr_dir + 'motivation.txt')
-elif data_type==2: # fMRI1
-    C = np.loadtxt(curr_dir + 'cov105115_all.txt');
-elif data_type==3: # fMRI2
-    C = np.loadtxt(curr_dir + 'cov118932_all.txt');
-elif data_type==4: # Japan
-    C = np.loadtxt(curr_dir + 'JapanCov.txt');
-elif data_type==5: # US
-    C = np.loadtxt(curr_dir + 'USCov.txt');
+C = np.loadtxt(curr_dir + 'motivation.txt')
 
 N = C.shape[0] # size of the matrix
 
@@ -40,7 +29,7 @@ tolerance = 1e-5; # to judge whether the algorithm has converged. In the paper =
 r = 1e-4; # learning rate. If r is too large, the algorithm would not converge
 # default r = 1e-4
 
-C_con, alpha, beta, it = max_ent_naive_gradient_descent(C, tolerance, r, transform_to_corr_mat);
+C_con, alpha, beta, it = cg.max_ent_config_naive_gradient_descent(C, tolerance, r, transform_to_corr_mat);
 
 if transform_to_corr_mat == True:
     D_n_05 = np.diag(np.power(np.diag(C_con),-0.5))
