@@ -26,10 +26,7 @@ if min_eig_C < 1e-6 * max(np.diag(C)):
 
 tolerance = 1e-5; # to judge whether the algorithm has converged. In the paper = 1e-5
 
-r = 1e-4; # learning rate. If r is too large, the algorithm would not converge
-# default r = 1e-4
-
-C_con, alpha, beta, it = cg.max_ent_config_naive_gradient_descent(C, tolerance, r, transform_to_corr_mat);
+C_con = cg.max_ent_config_dmcc(C, tolerance, transform_to_corr_mat);
 
 if transform_to_corr_mat == True:
     D_n_05 = np.diag(np.power(np.diag(C_con),-0.5))
