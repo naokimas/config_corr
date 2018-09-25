@@ -2,7 +2,7 @@
 import cvxpy as cv
 import numpy as np
 
-def detmax_max_ent_K_config(C, tolerance = 1e-5, transform_to_corr_mat = True):
+def max_ent_config_dmcc(C, tolerance = 1e-5, transform_to_corr_mat = True):
     """
      
     DET-MAX algorithm for estimating the configuration model for correlation matrix data 
