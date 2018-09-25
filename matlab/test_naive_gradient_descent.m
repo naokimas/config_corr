@@ -10,10 +10,10 @@ curr_dir = '../data'
 
 % We provide only motivation.txt (as described in Masuda, Kojaku & Sano, Physical Review E, 2018)
 % Matrix C can be either a covariance or correlation matrix
-% C = load([curr_dir '/motivation.txt']);
+C = load([curr_dir '/motivation.txt']);
 % C = load([curr_dir '/cov105115_all.txt']);
 % C = load([curr_dir '/cov118932_all.txt']);
- C = load([curr_dir '/JapanCov.txt']);
+% C = load([curr_dir '/JapanCov.txt']);
 % C = load([curr_dir '/USCov.txt']);
 
 N = size(C,1); % size of the matrix
@@ -22,7 +22,7 @@ N = size(C,1); % size of the matrix
 min_eig_C = min(eig(C));
 if min_eig_C < 1e-6 * max(diag(C))
     fprintf('min eig = %f\n', min_eig_C);
-    error('Input correlation/covariance matrix must be full rank');
+    error('Input correlation/covariance matrix must be of full rank');
 end
 
 tolerance = 1e-5; % to judge whether the algorithm has converged. In the paper = 1e-5
@@ -33,7 +33,7 @@ r = 1e-4; % learning rate. If r is too large, the algorithm would not converge
 transform_to_corr_mat = 1; 
 % If transform_to_corr_mat == 1, transform the input covariance matrix to the correlation matrix before running the gradient descent method
 % Default value is 1
-[C_con, alpha, beta, it] = max_ent_K_config(C, tolerance, r, transform_to_corr_mat);
+[C_con, alpha, beta, it] = max_ent_config_naive_gradient_descent(C, tolerance, r, transform_to_corr_mat);
 % C_con is a covariance matrix but not a correlation matrix
 
 if transform_to_corr_mat == 1
