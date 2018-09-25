@@ -13,11 +13,15 @@ This package contains two algorithms.
 python3 test_dmcc.py
 ```
 
+* test_dmcc.py calls max_ent_config_dmcc.py
+
 ## Naive gradient descent algorithm in Python
 
 ```python
 python3 test_naive_gradient_descent.py
 ```
+
+* test_naive_gradient_descent.py calls max_ent_config_naive_gradient_descent.py
 
 
 ## Naive gradient descent algorithm in MATLAB
