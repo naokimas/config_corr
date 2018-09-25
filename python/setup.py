@@ -21,5 +21,5 @@ setup(
     ],
     keywords='correlation matrix configuration model network',
     packages=find_packages(),
-    install_requires=['scipy>=1.0', 'numpy', 'cvxpy'],
+    install_requires=['numpy', 'cvxpy'],
 )
