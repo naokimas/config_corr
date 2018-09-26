@@ -2,7 +2,7 @@
 Configuration model for correlation/covariance matrices
 
 This package contains two algorithms.
-* Altogihm DMCC solves a convex optimization problem and usually better than the other naive gradient descent algorithm. Therefore, we recommend DMCC over the naive gradient descent algorithm.
+* Algorithm DMCC solves a convex optimization problem and usually better than the other naive gradient descent algorithm. Therefore, we recommend DMCC over the naive gradient descent algorithm.
 * DMCC, including the performance test, is documented in the accompanying [DMCC-algorithm.pdf](https://github.com/naokimas/config_corr/blob/master/DMCC-algorithm.pdf).
 * DMCC is provided in Python only.
 * The naive gradient descent algorithm is provided in Python and MATLAB.
@@ -14,9 +14,9 @@ Package configcorr has the following dependencies:
 Python >= 3.4  
 setuptools >= 1.4  
 NumPy >= 1.8  
-CVMPY
+CVXPy >= 1.0
 
-configcorr automatically installs NumPy and CVMPY.
+These packages need to be installed manually.
 
 Clone the configcorr git repository by running
 
