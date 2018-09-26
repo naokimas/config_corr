@@ -7,7 +7,7 @@ This package contains two algorithms.
 * DMCC is provided in Python only.
 * The naive gradient descent algorithm is provided in Python and MATLAB.
 
-#$ Install from source
+## Install from source
 
 configcorr has the following dependencies:
 
@@ -20,13 +20,13 @@ configcorr automatically installs NumPy and CVMPY will need to be installed manu
 
 Clone the configcorr git repository by running
 
-```
+```python
 git clone https://github.com/naokimas/config_corr.git
 ```
 
 Navigate to the top-level of the cloned directory and run
 
-```
+```python
 python setup.py install
 ```
 
