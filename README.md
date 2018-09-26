@@ -12,11 +12,14 @@ This package contains two algorithms.
 configcorr has the following dependencies:
 
 Python >= 3.4
+
 setuptools >= 1.4
+
 NumPy >= 1.8
+
 CVMPY
 
-configcorr automatically installs NumPy and CVMPY will need to be installed manually.
+configcorr automatically installs NumPy and CVMPY.
 
 Clone the configcorr git repository by running
 
