@@ -3,7 +3,7 @@ Configuration model for correlation/covariance matrices
 
 This package contains two algorithms.
 * Altogihm DMCC solves a convex optimization problem and usually better than the other naive gradient descent algorithm. Therefore, we recommend DMCC over the naive gradient descent algorithm.
-* DMCC, including the performance test, is documented in the accompanying pdf file.
+* DMCC, including the performance test, is documented in the accompanying pdf file DMCC-algorithm.pdf.
 * DMCC is provided in Python only.
 * The naive gradient descent algorithm is provided in Python and MATLAB.
 
