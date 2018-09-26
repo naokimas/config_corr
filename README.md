@@ -9,7 +9,7 @@ This package contains two algorithms.
 
 ## Install from source
 
-configcorr has the following dependencies:
+Package configcorr has the following dependencies:
 
 Python >= 3.4  
 setuptools >= 1.4  
