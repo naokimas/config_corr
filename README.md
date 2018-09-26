@@ -24,7 +24,7 @@ Clone the configcorr git repository by running
 git clone https://github.com/naokimas/config_corr.git
 ```
 
-Navigate to the top-level of the cloned directory and run
+Then, navigate to the top-level of the cloned directory and run
 
 ```python
 python setup.py install
