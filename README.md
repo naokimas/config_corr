@@ -7,6 +7,12 @@ This package contains two algorithms.
 * DMCC is provided in Python only.
 * The naive gradient descent algorithm is provided in Python and MATLAB.
 
+## Install from pip
+
+```python
+pip install configcorr
+```
+
 ## Install from source
 
 Package configcorr has the following dependencies:
